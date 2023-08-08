@@ -1,21 +1,36 @@
 # Que
 
-**TODO: Add description**
+Quick and dirty, no hex package yet.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `que` to your list of dependencies in `mix.exs`:
+Add the following to deps:
 
 ```elixir
-def deps do
-  [
-    {:que, "~> 0.1.0"}
-  ]
+   {:que, github: "aerosol/que"}
+```
+
+Update your Repo (postgres, clickhouse - sql ones) with:
+
+```elixir
+defmodule MyApp.Repo do
+   ...
+   use Que
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/que>.
+Update points of interests:
+
+```elixir
+
+defp aggregate_events(site, query, metrics) do
+  from(e in base_event_query(site, query), select: %{})
+  |> select_event_metrics(metrics)
+  |> ClickhouseRepo.que(label: "select event metrics") # <--
+  |> merge_imported(site, query, :aggregate, metrics)
+  |> ClickhouseRepo.que(label: "merge imported") # <--
+  |> ClickhouseRepo.one()
+  |> ClickhouseRepo.que(label: "oooh, the results") # <--
+end
+```
+
+Test and enjoy.
 

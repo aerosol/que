@@ -19,7 +19,7 @@ defmodule Que.MixProject do
 
   defp deps do
     [
-      {:hahash, "~> 0.1.0"},
+      {:hahash, "> 0.1.0"},
       {:ecto, "~> 3.10.3", override: true},
       {:tabula, "~> 2.1.1"}
     ]
